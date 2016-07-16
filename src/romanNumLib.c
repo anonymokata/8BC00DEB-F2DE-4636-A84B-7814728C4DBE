@@ -14,8 +14,25 @@
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
-    strcpy(sum, aval);
-    strcat(sum, bval);
+    char buf[80];
+    char* p;
+    
+    strcpy(buf, aval);
+    strcat(buf, bval);
+    if ((p = strstr(buf, "iiiii")) != NULL)
+    {
+        int idx;
+        int count = p - buf;
+        strncpy(sum, p, count);
+        strcat(sum, "v");
+        idx = count + 5;
+        strcat(sum, &buf[idx]);
+    }
+    else
+    {
+        strcpy(sum, buf);
+    }
+    
     
     return 1;
 }
