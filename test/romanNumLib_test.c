@@ -4,9 +4,13 @@
 
 #include "../src/romanNumLib.h"
 
+static char buf[80];
+
 /****************************************************************************************/
-START_TEST (test_default)
+START_TEST (test_simple_addition_ipi)
 {
+    romanNumbersAdd("i", "i", buf);
+    ck_assert_str_eq(buf, "ii");
 }
 END_TEST
 
@@ -21,7 +25,7 @@ Suite * RomanNumberalLib_suite(void)
    /* Core test case */
    tc_core = tcase_create("Core");
 
-   tcase_add_test(tc_core, test_default);
+   tcase_add_test(tc_core, test_simple_addition_ipi);
 
    suite_add_tcase(s, tc_core);
 

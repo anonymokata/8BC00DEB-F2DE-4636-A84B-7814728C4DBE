@@ -12,13 +12,13 @@
 /****************************************************************************************/
 //  Public Functions
 /****************************************************************************************/
-int RomanNumbersAdd(const char *aval, const char *bval, char *sum)
+int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
     return 1;
 }
 
 /****************************************************************************************/
-int RomanNumbersSub(const char *aval, const char *bval, char *diff)
+int romanNumbersSub(const char *aval, const char *bval, char *diff)
 {
     return 1;
 }
