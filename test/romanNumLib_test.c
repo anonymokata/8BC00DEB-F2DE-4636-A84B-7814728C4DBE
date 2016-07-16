@@ -28,6 +28,13 @@ START_TEST (test_simple_addition_iiipiii)
 }
 END_TEST
 
+START_TEST (test_simple_addition_iipii)
+{
+    romanNumbersAdd("ii", "ii", buf);
+    ck_assert_str_eq(buf, "iv");
+}
+END_TEST
+
 /****************************************************************************************/
 Suite * RomanNumberalLib_suite(void)
 {
@@ -42,6 +49,7 @@ Suite * RomanNumberalLib_suite(void)
     tcase_add_test(tc_core, test_simple_addition_ipi);
     tcase_add_test(tc_core, test_simple_addition_iipiii);
     tcase_add_test(tc_core, test_simple_addition_iiipiii);
+    tcase_add_test(tc_core, test_simple_addition_iipii);
 
    suite_add_tcase(s, tc_core);
 
