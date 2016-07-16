@@ -14,6 +14,9 @@
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
+    strcpy(sum, aval);
+    strcat(sum, bval);
+    
     return 1;
 }
 
