@@ -20,13 +20,24 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     
     sum[0] = '\0';
     
-    if(*aval == 'v')
+    if (strncmp(aval, "ix", 2) == 0)
+    {
+        aval = "viiii";
+    }
+    
+    if (strncmp(bval, "ix", 2) == 0)
+    {
+        bval = "viiii";
+    }
+    
+    
+    if (*aval == 'v')
     {
         strcat(sum, "v");
         ++aval;
     }
 
-    if(*bval == 'v')
+    if (*bval == 'v')
     {
         strcat(sum, "v");
         ++bval;
