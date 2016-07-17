@@ -35,6 +35,12 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     strcat(sum, aval);
     strcat(sum, bval);
 
+    if ((p = strstr(sum, "vv")) != NULL)
+    {
+        *(p++) = 'x';
+        strcpy(p, p+1);
+    }
+    
     if (((p = strstr(sum, "viv")) != NULL) ||
         ((p = strstr(sum, "ivv")) != NULL))
     {
