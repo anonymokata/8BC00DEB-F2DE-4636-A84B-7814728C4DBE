@@ -16,54 +16,42 @@
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
-    char buf[80];
-    char* pBuf;
+    char* p;
     
-    buf[0] = '\0';
+    sum[0] = '\0';
     
     if(*aval == 'v')
     {
-        strcat(buf, "v");
+        strcat(sum, "v");
         ++aval;
     }
 
     if(*bval == 'v')
     {
-        strcat(buf, "v");
+        strcat(sum, "v");
         ++bval;
     }
     
-    strcat(buf, aval);
-    strcat(buf, bval);
+    strcat(sum, aval);
+    strcat(sum, bval);
 
-    if (((pBuf = strstr(buf, "iiv")) != NULL) ||
-        ((pBuf = strstr(buf, "ivi")) != NULL))
+    if (((p = strstr(sum, "iiv")) != NULL) ||
+        ((p = strstr(sum, "ivi")) != NULL))
     {
-        *(pBuf++) = 'v';
-        strcpy(pBuf, pBuf+3);
+        *(p++) = 'v';
+        strcpy(p, p+3);
     }
     
-    if ((pBuf = strstr(buf, "iiiii")) != NULL)
+    if ((p = strstr(sum, "iiiii")) != NULL)
     {
-        int idx;
-        int count = pBuf - buf;
-        strncpy(sum, pBuf, count);
-        strcat(sum, "v");
-        idx = count + 5;
-        strcat(sum, &buf[idx]);
+        *(p++) = 'v';
+        strcpy(p, p+5);
     }
-    else if ((pBuf = strstr(buf, "iiii")) != NULL)
+    else if ((p = strstr(sum, "iiii")) != NULL)
     {
-        int idx;
-        int count = pBuf - buf;
-        strncpy(sum, pBuf, count);
-        strcat(sum, "iv");
-        idx = count + 4;
-        strcat(sum, &buf[idx]);
-    }
-    else
-    {
-        strcpy(sum, buf);
+        *(p++) = 'i';
+        *(p++) = 'v';
+        strcpy(p, p+5);
     }
     
     
