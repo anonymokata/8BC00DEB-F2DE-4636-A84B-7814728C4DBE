@@ -9,30 +9,46 @@
 //  Private Functions
 /****************************************************************************************/
 
+
+
 /****************************************************************************************/
 //  Public Functions
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
     char buf[80];
-    char* p;
+    char* pBuf;
     
-    strcpy(buf, aval);
+    buf[0] = '\0';
+    
+    if(*aval == 'v')
+    {
+        strcat(buf, "v");
+        ++aval;
+    }
+
+    if(*bval == 'v')
+    {
+        strcat(buf, "v");
+        ++bval;
+    }
+    
+    strcat(buf, aval);
     strcat(buf, bval);
-    if ((p = strstr(buf, "iiiii")) != NULL)
+    if ((pBuf = strstr(buf, "iiiii")) != NULL)
     {
         int idx;
-        int count = p - buf;
-        strncpy(sum, p, count);
+        int count = pBuf - buf;
+        strncpy(sum, pBuf, count);
         strcat(sum, "v");
         idx = count + 5;
         strcat(sum, &buf[idx]);
     }
-    else if ((p = strstr(buf, "iiii")) != NULL)
+    else if ((pBuf = strstr(buf, "iiii")) != NULL)
     {
         int idx;
-        int count = p - buf;
-        strncpy(sum, p, count);
+        int count = pBuf - buf;
+        strncpy(sum, pBuf, count);
         strcat(sum, "iv");
         idx = count + 4;
         strcat(sum, &buf[idx]);
