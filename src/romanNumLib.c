@@ -45,13 +45,13 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     if ((p = strstr(sum, "iiiii")) != NULL)
     {
         *(p++) = 'v';
-        strcpy(p, p+5);
+        strcpy(p, p+4);
     }
     else if ((p = strstr(sum, "iiii")) != NULL)
     {
         *(p++) = 'i';
         *(p++) = 'v';
-        strcpy(p, p+5);
+        strcpy(p, p+2);
     }
     
     
