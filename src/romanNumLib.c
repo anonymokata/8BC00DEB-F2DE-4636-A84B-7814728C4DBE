@@ -16,6 +16,7 @@
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
+    int bDone = 1;
     char* p;
     
     sum[0] = '\0';
@@ -36,7 +37,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         strcat(sum, "v");
         ++aval;
     }
-
+    
     if (*bval == 'v')
     {
         strcat(sum, "v");
@@ -45,40 +46,50 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     
     strcat(sum, aval);
     strcat(sum, bval);
+    
+    do
+    {
+        bDone = 1;
+        
+        if ((p = strstr(sum, "vv")) != NULL)
+        {
+            *(p++) = 'x';
+            strcpy(p, p+1);
+            bDone = 0;
+        }
+        
+        if (((p = strstr(sum, "viv")) != NULL) ||
+            ((p = strstr(sum, "ivv")) != NULL))
+        {
+            *(p++) = 'i';
+            *(p++) = 'x';
+            strcpy(p, p+1);
+            bDone = 0;
+        }
+        
+        if (((p = strstr(sum, "iiv")) != NULL) ||
+            ((p = strstr(sum, "ivi")) != NULL))
+        {
+            *(p++) = 'v';
+            strcpy(p, p+3);
+            bDone = 0;
+        }
+        
+        if ((p = strstr(sum, "iiiii")) != NULL)
+        {
+            *(p++) = 'v';
+            strcpy(p, p+4);
+            bDone = 0;
+        }
+        else if ((p = strstr(sum, "iiii")) != NULL)
+        {
+            *(p++) = 'i';
+            *(p++) = 'v';
+            strcpy(p, p+2);
+            bDone = 0;
+        }
 
-    if ((p = strstr(sum, "vv")) != NULL)
-    {
-        *(p++) = 'x';
-        strcpy(p, p+1);
-    }
-    
-    if (((p = strstr(sum, "viv")) != NULL) ||
-        ((p = strstr(sum, "ivv")) != NULL))
-    {
-        *(p++) = 'i';
-        *(p++) = 'x';
-        strcpy(p, p+1);
-    }
-    
-    if (((p = strstr(sum, "iiv")) != NULL) ||
-        ((p = strstr(sum, "ivi")) != NULL))
-    {
-        *(p++) = 'v';
-        strcpy(p, p+3);
-    }
-    
-    if ((p = strstr(sum, "iiiii")) != NULL)
-    {
-        *(p++) = 'v';
-        strcpy(p, p+4);
-    }
-    else if ((p = strstr(sum, "iiii")) != NULL)
-    {
-        *(p++) = 'i';
-        *(p++) = 'v';
-        strcpy(p, p+2);
-    }
-    
+    } while(!bDone);
     
     return 1;
 }
