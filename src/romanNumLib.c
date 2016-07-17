@@ -35,6 +35,14 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     
     strcat(buf, aval);
     strcat(buf, bval);
+
+    if (((pBuf = strstr(buf, "iiv")) != NULL) ||
+        ((pBuf = strstr(buf, "ivi")) != NULL))
+    {
+        *(pBuf++) = 'v';
+        strcpy(pBuf, pBuf+3);
+    }
+    
     if ((pBuf = strstr(buf, "iiiii")) != NULL)
     {
         int idx;
