@@ -30,8 +30,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     {
         bval = "viiii";
     }
-    
-    
+
     if (*aval == 'v')
     {
         strcat(sum, "v");
