@@ -105,10 +105,17 @@ START_TEST (test_multidigit_addition_xpx)
 }
 END_TEST
 
-START_TEST (test_simple_addition_xxpxxx)
+START_TEST (test_multidigit_addition_xxpxxx)
 {
     romanNumbersAdd("xx", "xxx", buf);
     ck_assert_str_eq(buf, "l");
+}
+END_TEST
+
+START_TEST (test_multidigit_addition_xcpxx)
+{
+    romanNumbersAdd("xc", "xx", buf);
+    ck_assert_str_eq(buf, "cx");
 }
 END_TEST
 
@@ -138,7 +145,8 @@ Suite * RomanNumberalLib_suite(void)
     tcase_add_test(tc_core, test_simple_addition_ipix);
 
     tcase_add_test(tc_core, test_multidigit_addition_xpx);
-    tcase_add_test(tc_core, test_simple_addition_xxpxxx);
+    tcase_add_test(tc_core, test_multidigit_addition_xxpxxx);
+    tcase_add_test(tc_core, test_multidigit_addition_xcpxx);
 
    suite_add_tcase(s, tc_core);
 
