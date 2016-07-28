@@ -15,6 +15,7 @@ typedef struct
 
 static const romanDecimalSymbols_t _romanSymbolSets[]  =
 {
+    { "m", "cm", "d", "cd", "c" },
     { "c", "xc", "l", "xl", "x" },
     { "x", "ix", "v", "iv", "i" }
 };
