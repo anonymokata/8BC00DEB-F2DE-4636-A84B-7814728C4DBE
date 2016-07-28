@@ -31,39 +31,29 @@ static const romanDecimalSymbols_t _romanSymbolSets[]  =
 /****************************************************************************************/
 //  Private Functions
 /****************************************************************************************/
-static void _catSymbol(char* pBuf, char* pSym, int count)
-{
-    int i;
-    for (i=0; i<count; ++i)
-    {
-        strcat(pBuf, pSym);
-    }
-}
-
-
-static const char * _convertDecimalSymbolsToAllOnes(const char *pInp, char *pAccum, const romanDecimalSymbols_t* pSymbols)
+static const char * _convertDecimalSymbolsToCount(const char *pInp, int *pDecimalVal, const romanDecimalSymbols_t* pSymbols)
 {
     if (strlen(pSymbols->ninesSymbol) != 0 && strncmp(pInp, pSymbols->ninesSymbol, strlen(pSymbols->ninesSymbol)) == 0)
     {
-        _catSymbol(pAccum, pSymbols->onesSymbol, 9);
+        (*pDecimalVal) += 9;
         pInp += strlen(pSymbols->ninesSymbol);
     }
     else if (strlen(pSymbols->foursSymbol) != 0 && strncmp(pInp, pSymbols->foursSymbol, strlen(pSymbols->foursSymbol)) == 0)
     {
-        _catSymbol(pAccum, pSymbols->onesSymbol, 4);
+        (*pDecimalVal) += 4;
         pInp += strlen(pSymbols->foursSymbol);
     }
     else
     {
         if (strlen(pSymbols->fivesSymbol) != 0 && strncmp(pInp, pSymbols->fivesSymbol, strlen(pSymbols->fivesSymbol)) == 0)
         {
-            _catSymbol(pAccum, pSymbols->onesSymbol, 5);
+            (*pDecimalVal) += 5;
             pInp += strlen(pSymbols->fivesSymbol);
         }
         
         while (strncmp(pInp, pSymbols->onesSymbol, strlen(pSymbols->onesSymbol)) == 0)
         {
-            _catSymbol(pAccum, pSymbols->onesSymbol, 1);
+            ++(*pDecimalVal);
             pInp += strlen(pSymbols->onesSymbol);
         }
     }
@@ -77,7 +67,8 @@ static const char * _convertDecimalSymbolsToAllOnes(const char *pInp, char *pAcc
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
     int bValid = 1;
-    char accumBuf[4][32];
+    int decimalVal[4];
+    char decimalBuf[4][16];
     int i;
     int carry;
     const int loopCount = sizeof(_romanSymbolSets) / sizeof(_romanSymbolSets[0]);
@@ -85,68 +76,72 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     const char* pA = aval;
     const char* pB = bval;
     
-    memset(&accumBuf[0][0], '\0', sizeof(accumBuf));
     sum[0] = '\0';
     
-    // printf("Accumulating %s + %s\n", aval, bval);
+    printf("Accumulating %s + %s\n", aval, bval);
 
     for (i = 0; i < loopCount; ++i)
     {
         const romanDecimalSymbols_t* pSymbols = &_romanSymbolSets[i];
+        decimalVal[i] = 0;
         
-        pA = _convertDecimalSymbolsToAllOnes(pA, accumBuf[i], pSymbols);
-        pB = _convertDecimalSymbolsToAllOnes(pB, accumBuf[i], pSymbols);
+        pA = _convertDecimalSymbolsToCount(pA, &decimalVal[i], pSymbols);
+        pB = _convertDecimalSymbolsToCount(pB, &decimalVal[i], pSymbols);
         
-        // printf("Digit Accum [%d] %s\n", i, accumBuf[i]);
+        printf("Digit Accum [%d] %d\n", i, decimalVal[i]);
     }
     
     carry = 0;
     for (i = loopCount-1; i >= 0; --i)
     {
+        int j;
         const romanDecimalSymbols_t* pSymbols = &_romanSymbolSets[i];
-
-        int decimalSymbolLen = strlen(accumBuf[i]) + carry;
-        accumBuf[i][0] = '\0';
+        int thisDecimalVal = decimalVal[i] + carry;
+        
+        decimalBuf[i][0] = '\0';
         carry = 0;
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen >= DECIMAL_BASE)
+        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal >= DECIMAL_BASE)
         {
             carry = 1;
-            decimalSymbolLen -= DECIMAL_BASE;
+            thisDecimalVal -= DECIMAL_BASE;
         }
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen == DECIMAL_NINE)
+        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
         {
-            strcat(accumBuf[i], pSymbols->ninesSymbol);
+            strcat(decimalBuf[i], pSymbols->ninesSymbol);
         }
-        else if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen == DECIMAL_FOUR)
+        else if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
         {
-            strcat(accumBuf[i], pSymbols->foursSymbol);
+            strcat(decimalBuf[i], pSymbols->foursSymbol);
         }
         else
         {
-            if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen >= DECIMAL_FIVE)
+            if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal >= DECIMAL_FIVE)
             {
-                strcat(accumBuf[i], pSymbols->fivesSymbol);
-                decimalSymbolLen -= DECIMAL_FIVE;
+                strcat(decimalBuf[i], pSymbols->fivesSymbol);
+                thisDecimalVal -= DECIMAL_FIVE;
             }
             
-            if (decimalSymbolLen > 3)
+            if (thisDecimalVal > 3)
             {
                 bValid = 0;
-                memset(&accumBuf[0][0], '\0', sizeof(accumBuf));
                 break;
             }
-            _catSymbol(accumBuf[i], pSymbols->onesSymbol, decimalSymbolLen);
+            
+            for (j =  0; j < thisDecimalVal; ++j)
+            {
+                strcat(decimalBuf[i], pSymbols->onesSymbol);
+            }
         }
     }
     
     for (i = 0; i < loopCount && bValid; ++i)
     {
-        strcat(sum, accumBuf[i]);
+        strcat(sum, decimalBuf[i]);
     }
     
-    // printf("result: %s\n\n", sum);
+    printf("result: %s\n\n", sum);
     
     
     return bValid;
