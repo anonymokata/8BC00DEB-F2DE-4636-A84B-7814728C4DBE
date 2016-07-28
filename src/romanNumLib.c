@@ -15,6 +15,7 @@ typedef struct
 
 static const romanDecimalSymbols_t _romanSymbolSets[]  =
 {
+    { "",    "",  "",   "", "m" },
     { "m", "cm", "d", "cd", "c" },
     { "c", "xc", "l", "xl", "x" },
     { "x", "ix", "v", "iv", "i" }
@@ -42,19 +43,19 @@ static void _catSymbol(char* pBuf, char* pSym, int count)
 
 static const char * _convertDecimalSymbolsToAllOnes(const char *pInp, char *pAccum, const romanDecimalSymbols_t* pSymbols)
 {
-    if (strncmp(pInp, pSymbols->ninesSymbol, strlen(pSymbols->ninesSymbol)) == 0)
+    if (strlen(pSymbols->ninesSymbol) != 0 && strncmp(pInp, pSymbols->ninesSymbol, strlen(pSymbols->ninesSymbol)) == 0)
     {
         _catSymbol(pAccum, pSymbols->onesSymbol, 9);
         pInp += strlen(pSymbols->ninesSymbol);
     }
-    else if (strncmp(pInp, pSymbols->foursSymbol, strlen(pSymbols->foursSymbol)) == 0)
+    else if (strlen(pSymbols->foursSymbol) != 0 && strncmp(pInp, pSymbols->foursSymbol, strlen(pSymbols->foursSymbol)) == 0)
     {
         _catSymbol(pAccum, pSymbols->onesSymbol, 4);
         pInp += strlen(pSymbols->foursSymbol);
     }
     else
     {
-        if (strncmp(pInp, pSymbols->fivesSymbol, strlen(pSymbols->fivesSymbol)) == 0)
+        if (strlen(pSymbols->fivesSymbol) != 0 && strncmp(pInp, pSymbols->fivesSymbol, strlen(pSymbols->fivesSymbol)) == 0)
         {
             _catSymbol(pAccum, pSymbols->onesSymbol, 5);
             pInp += strlen(pSymbols->fivesSymbol);
@@ -75,7 +76,7 @@ static const char * _convertDecimalSymbolsToAllOnes(const char *pInp, char *pAcc
 /****************************************************************************************/
 int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 {
-    int bDone = 1;
+    int bValid = 1;
     char accumBuf[4][32];
     int i;
     int carry;
@@ -87,7 +88,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     memset(&accumBuf[0][0], '\0', sizeof(accumBuf));
     sum[0] = '\0';
     
-    printf("Accumulating %s + %s\n", aval, bval);
+    // printf("Accumulating %s + %s\n", aval, bval);
 
     for (i = 0; i < loopCount; ++i)
     {
@@ -96,7 +97,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         pA = _convertDecimalSymbolsToAllOnes(pA, accumBuf[i], pSymbols);
         pB = _convertDecimalSymbolsToAllOnes(pB, accumBuf[i], pSymbols);
         
-        printf("Digit Accum [%d] %s\n", i, accumBuf[i]);
+        // printf("Digit Accum [%d] %s\n", i, accumBuf[i]);
     }
     
     carry = 0;
@@ -108,41 +109,47 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         accumBuf[i][0] = '\0';
         carry = 0;
         
-        if (decimalSymbolLen >= DECIMAL_BASE)
+        if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen >= DECIMAL_BASE)
         {
             carry = 1;
             decimalSymbolLen -= DECIMAL_BASE;
         }
         
-        if (decimalSymbolLen == DECIMAL_NINE)
+        if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen == DECIMAL_NINE)
         {
             strcat(accumBuf[i], pSymbols->ninesSymbol);
         }
-        else if (decimalSymbolLen == DECIMAL_FOUR)
+        else if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen == DECIMAL_FOUR)
         {
             strcat(accumBuf[i], pSymbols->foursSymbol);
         }
         else
         {
-            if (decimalSymbolLen >= DECIMAL_FIVE)
+            if (strlen(pSymbols->fivesSymbol) != 0 && decimalSymbolLen >= DECIMAL_FIVE)
             {
                 strcat(accumBuf[i], pSymbols->fivesSymbol);
                 decimalSymbolLen -= DECIMAL_FIVE;
             }
             
+            if (decimalSymbolLen > 3)
+            {
+                bValid = 0;
+                memset(&accumBuf[0][0], '\0', sizeof(accumBuf));
+                break;
+            }
             _catSymbol(accumBuf[i], pSymbols->onesSymbol, decimalSymbolLen);
         }
     }
     
-    for (i = 0; i < loopCount; ++i)
+    for (i = 0; i < loopCount && bValid; ++i)
     {
         strcat(sum, accumBuf[i]);
     }
     
-    printf("result: %s\n\n", sum);
+    // printf("result: %s\n\n", sum);
     
     
-    return bDone;
+    return bValid;
 }
 
 /****************************************************************************************/

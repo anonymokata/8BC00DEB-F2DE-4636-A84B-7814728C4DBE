@@ -133,6 +133,13 @@ START_TEST (test_multidigit_addition_cccpcm)
 }
 END_TEST
 
+START_TEST (test_multidigit_addition_overflow)
+{
+    int result = romanNumbersAdd("mmm", "mc", buf);
+    ck_assert_int_eq(result, 0);
+}
+END_TEST
+
 /****************************************************************************************/
 Suite * RomanNumberalLib_suite(void)
 {
@@ -163,6 +170,9 @@ Suite * RomanNumberalLib_suite(void)
     tcase_add_test(tc_core, test_multidigit_addition_xcpxx);
     tcase_add_test(tc_core, test_multidigit_addition_cccpdc);
     tcase_add_test(tc_core, test_multidigit_addition_cccpcm);
+    tcase_add_test(tc_core, test_multidigit_addition_overflow);
+    
+    
 
    suite_add_tcase(s, tc_core);
 
