@@ -78,7 +78,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
     
     sum[0] = '\0';
     
-    printf("Accumulating %s + %s\n", aval, bval);
+    // printf("Accumulating %s + %s\n", aval, bval);
 
     for (i = 0; i < loopCount; ++i)
     {
@@ -88,7 +88,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         pA = _convertDecimalSymbolsToCount(pA, &decimalVal[i], pSymbols);
         pB = _convertDecimalSymbolsToCount(pB, &decimalVal[i], pSymbols);
         
-        printf("Digit Accum [%d] %d\n", i, decimalVal[i]);
+        // printf("Digit Accum [%d] %d\n", i, decimalVal[i]);
     }
     
     carry = 0;
@@ -141,8 +141,7 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         strcat(sum, decimalBuf[i]);
     }
     
-    printf("result: %s\n\n", sum);
-    
+    // printf("result: %s\n\n", sum);
     
     return bValid;
 }

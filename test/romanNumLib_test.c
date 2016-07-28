@@ -140,6 +140,17 @@ START_TEST (test_multidigit_addition_overflow)
 }
 END_TEST
 
+
+
+START_TEST (test_simple_subtraction_iiipii)
+{
+    romanNumbersSub("iii", "ii", buf);
+    ck_assert_str_eq(buf, "i");
+}
+END_TEST
+
+
+
 /****************************************************************************************/
 Suite * RomanNumberalLib_suite(void)
 {
@@ -173,6 +184,7 @@ Suite * RomanNumberalLib_suite(void)
     tcase_add_test(tc_core, test_multidigit_addition_overflow);
     
     
+    tcase_add_test(tc_core, test_simple_subtraction_iiipii);
 
    suite_add_tcase(s, tc_core);
 
