@@ -142,10 +142,31 @@ END_TEST
 
 
 
-START_TEST (test_simple_subtraction_iiipii)
+START_TEST (test_simple_subtraction_iiisii)
 {
     romanNumbersSub("iii", "ii", buf);
     ck_assert_str_eq(buf, "i");
+}
+END_TEST
+
+START_TEST (test_multidigit_subtraction_ccsclv)
+{
+    romanNumbersSub("cc", "clv", buf);
+    ck_assert_str_eq(buf, "xlv");
+}
+END_TEST
+
+START_TEST (test_multidigit_subtraction_mmcmscdxl)
+{
+    romanNumbersSub("mmcm", "cdxl", buf);
+    ck_assert_str_eq(buf, "mmcdlx");
+}
+END_TEST
+
+START_TEST (test_multidigit_subtraction_underflow)
+{
+    int result = romanNumbersSub("m", "mc", buf);
+    ck_assert_int_eq(result, 0);
 }
 END_TEST
 
@@ -184,7 +205,10 @@ Suite * RomanNumberalLib_suite(void)
     tcase_add_test(tc_core, test_multidigit_addition_overflow);
     
     
-    tcase_add_test(tc_core, test_simple_subtraction_iiipii);
+    tcase_add_test(tc_core, test_simple_subtraction_iiisii);
+    tcase_add_test(tc_core, test_multidigit_subtraction_ccsclv);
+    tcase_add_test(tc_core, test_multidigit_subtraction_mmcmscdxl);
+    tcase_add_test(tc_core, test_multidigit_subtraction_underflow);
 
    suite_add_tcase(s, tc_core);
 
