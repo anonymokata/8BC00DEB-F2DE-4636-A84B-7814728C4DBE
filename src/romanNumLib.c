@@ -149,6 +149,84 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
 /****************************************************************************************/
 int romanNumbersSub(const char *aval, const char *bval, char *diff)
 {
-    return 1;
+    int bValid = 1;
+    int decimalVal[4];
+    char decimalBuf[4][16];
+    int i;
+    int borrow;
+    const int loopCount = sizeof(_romanSymbolSets) / sizeof(_romanSymbolSets[0]);
+    
+    const char* pA = aval;
+    const char* pB = bval;
+    
+    diff[0] = '\0';
+    
+    // printf("Accumulating %s + %s\n", aval, bval);
+    
+    for (i = 0; i < loopCount; ++i)
+    {
+        const romanDecimalSymbols_t* pSymbols = &_romanSymbolSets[i];
+        decimalVal[i] = 0;
+        
+        pB = _convertDecimalSymbolsToCount(pB, &decimalVal[i], pSymbols);
+        decimalVal[i] *= -1;
+        pA = _convertDecimalSymbolsToCount(pA, &decimalVal[i], pSymbols);
+        
+        // printf("Digit Accum [%d] %d\n", i, decimalVal[i]);
+    }
+    
+    borrow = 0;
+    for (i = loopCount-1; i >= 0; --i)
+    {
+        int j;
+        const romanDecimalSymbols_t* pSymbols = &_romanSymbolSets[i];
+        int thisDecimalVal = decimalVal[i] - borrow;
+        
+        decimalBuf[i][0] = '\0';
+        borrow = 0;
+        
+        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal < 0)
+        {
+            borrow = 1;
+            thisDecimalVal += DECIMAL_BASE;
+        }
+        
+        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
+        {
+            strcat(decimalBuf[i], pSymbols->ninesSymbol);
+        }
+        else if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
+        {
+            strcat(decimalBuf[i], pSymbols->foursSymbol);
+        }
+        else
+        {
+            if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal >= DECIMAL_FIVE)
+            {
+                strcat(decimalBuf[i], pSymbols->fivesSymbol);
+                thisDecimalVal -= DECIMAL_FIVE;
+            }
+            
+            if (thisDecimalVal > 3)
+            {
+                bValid = 0;
+                break;
+            }
+            
+            for (j =  0; j < thisDecimalVal; ++j)
+            {
+                strcat(decimalBuf[i], pSymbols->onesSymbol);
+            }
+        }
+    }
+    
+    for (i = 0; i < loopCount && bValid; ++i)
+    {
+        strcat(diff, decimalBuf[i]);
+    }
+    
+    // printf("result: %s\n\n", sum);
+    
+    return bValid;
 }
 
