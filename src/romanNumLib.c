@@ -101,17 +101,17 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
         decimalBuf[i][0] = '\0';
         carry = 0;
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal >= DECIMAL_BASE)
+        if (thisDecimalVal >= DECIMAL_BASE)
         {
             carry = 1;
             thisDecimalVal -= DECIMAL_BASE;
         }
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
+        if (strlen(pSymbols->ninesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
         {
             strcat(decimalBuf[i], pSymbols->ninesSymbol);
         }
-        else if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
+        else if (strlen(pSymbols->foursSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
         {
             strcat(decimalBuf[i], pSymbols->foursSymbol);
         }
@@ -134,6 +134,11 @@ int romanNumbersAdd(const char *aval, const char *bval, char *sum)
                 strcat(decimalBuf[i], pSymbols->onesSymbol);
             }
         }
+    }
+    
+    if (carry)
+    {
+        bValid = 0;
     }
     
     for (i = 0; i < loopCount && bValid; ++i)
@@ -161,7 +166,7 @@ int romanNumbersSub(const char *aval, const char *bval, char *diff)
     
     diff[0] = '\0';
     
-    // printf("Accumulating %s + %s\n", aval, bval);
+    printf("Computing %s - %s\n", aval, bval);
     
     for (i = 0; i < loopCount; ++i)
     {
@@ -172,7 +177,7 @@ int romanNumbersSub(const char *aval, const char *bval, char *diff)
         decimalVal[i] *= -1;
         pA = _convertDecimalSymbolsToCount(pA, &decimalVal[i], pSymbols);
         
-        // printf("Digit Accum [%d] %d\n", i, decimalVal[i]);
+        printf("Digit Diff [%d] %d\n", i, decimalVal[i]);
     }
     
     borrow = 0;
@@ -185,17 +190,17 @@ int romanNumbersSub(const char *aval, const char *bval, char *diff)
         decimalBuf[i][0] = '\0';
         borrow = 0;
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal < 0)
+        if (thisDecimalVal < 0)
         {
             borrow = 1;
             thisDecimalVal += DECIMAL_BASE;
         }
         
-        if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
+        if (strlen(pSymbols->ninesSymbol) != 0 && thisDecimalVal == DECIMAL_NINE)
         {
             strcat(decimalBuf[i], pSymbols->ninesSymbol);
         }
-        else if (strlen(pSymbols->fivesSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
+        else if (strlen(pSymbols->foursSymbol) != 0 && thisDecimalVal == DECIMAL_FOUR)
         {
             strcat(decimalBuf[i], pSymbols->foursSymbol);
         }
@@ -220,12 +225,17 @@ int romanNumbersSub(const char *aval, const char *bval, char *diff)
         }
     }
     
+    if (borrow)
+    {
+        bValid = 0;
+    }
+    
     for (i = 0; i < loopCount && bValid; ++i)
     {
         strcat(diff, decimalBuf[i]);
     }
     
-    // printf("result: %s\n\n", sum);
+    printf("result: %s\n\n", diff);
     
     return bValid;
 }
